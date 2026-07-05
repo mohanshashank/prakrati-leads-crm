@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gunjan — Real Estate Leads CRM</title>
+<title>Prakrati — Real Estate Leads CRM</title>
 <style>
   :root{--bg:#0f1420;--panel:#171e2e;--panel2:#1e2740;--line:#2a3550;--txt:#e6ebf5;--mut:#8a97b3;
     --acc:#4f8cff;--acc2:#7c5cff;--good:#2ecc71;--warn:#f1c40f;--bad:#e74c3c;--wa:#25d366;}
@@ -75,7 +75,7 @@
 <body>
 <div id="gate" style="position:fixed;inset:0;z-index:999;background:radial-gradient(1200px 600px at 50% -10%,#1b2540,#0b101c);display:flex;align-items:center;justify-content:center;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif">
   <div style="width:340px;background:#141b2c;border:1px solid #2a3550;border-radius:14px;padding:26px;box-shadow:0 20px 60px rgba(0,0,0,.5)">
-    <div style="font-size:20px;font-weight:800;color:#e6ebf5;letter-spacing:.3px">Sanaya <span style="color:#4f8cff">Leads CRM</span></div>
+    <div style="font-size:20px;font-weight:800;color:#e6ebf5;letter-spacing:.3px">Prakrati <span style="color:#4f8cff">Leads CRM</span></div>
     <div style="font-size:12px;color:#8a97b3;margin:6px 0 18px">Private — enter the team password to continue.</div>
     <input id="gatePw" type="password" placeholder="Password" autocomplete="current-password"
       style="width:100%;background:#0f1420;border:1px solid #2a3550;color:#e6ebf5;border-radius:9px;padding:11px 12px;font-size:14px;outline:none">
@@ -87,7 +87,7 @@
 <div id="app" style="display:none">
 <header>
   <div class="row1">
-    <h1>Gunjan <span>Leads CRM</span></h1>
+    <h1>Prakrati <span>Leads CRM</span></h1>
     <div class="stats">
       <div class="stat">Total <b id="s-total">0</b></div>
       <div class="stat">Showing <b id="s-shown">0</b></div>
@@ -105,6 +105,7 @@
       <button id="addBtn" class="mini">+ Add</button>
       <button id="exportCsv" class="mini">CSV</button>
       <button id="resetBtn" class="mini del">Reset</button>
+      <button id="logoutBtn" class="mini">Logout</button>
     </div>
   </div>
   <div class="bar2">
@@ -326,6 +327,7 @@ document.getElementById('f-uncontacted').addEventListener('change',()=>{page=1;r
 document.getElementById('addBtn').onclick=addLead;
 document.getElementById('exportCsv').onclick=toCsv;
 document.getElementById('helpBtn').onclick=showHelp;
+document.getElementById('logoutBtn').onclick=function(){try{sessionStorage.removeItem('prakrati_ok')}catch(e){}location.reload()};
 document.getElementById('resetBtn').onclick=()=>{if(confirm('Discard edits and reload original data?')){localStorage.removeItem(LSKEY);data=load();render()}};
 document.getElementById('prev').onclick=()=>{if(page>1){page--;render()}};
 document.getElementById('next').onclick=()=>{page++;render()};
@@ -337,12 +339,12 @@ render();
 (function(){
   // Client-side access gate. NOTE: this deters casual access only; anyone technical can bypass a
   // static-site password. Do not treat it as strong security. Change PASS below to your team password.
-  var PASS="sanaya2026";
+  var PASS="Groot@09";
   var gate=document.getElementById('gate'),app=document.getElementById('app'),
       inp=document.getElementById('gatePw'),btn=document.getElementById('gateBtn'),err=document.getElementById('gateErr');
-  function unlock(){app.style.display='block';gate.style.display='none';try{sessionStorage.setItem('sanaya_ok','1')}catch(e){}}
+  function unlock(){app.style.display='block';gate.style.display='none';try{sessionStorage.setItem('prakrati_ok','1')}catch(e){}}
   function tryPw(){if(inp.value===PASS){unlock()}else{err.textContent='Wrong password';inp.value='';inp.focus()}}
-  if(sessionStorage.getItem('sanaya_ok')==='1'){unlock()}
+  if(sessionStorage.getItem('prakrati_ok')==='1'){unlock()}
   btn.onclick=tryPw;
   inp.addEventListener('keydown',function(e){if(e.key==='Enter')tryPw()});
   inp.focus();
