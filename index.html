@@ -70,6 +70,49 @@
   a.tel{color:#bcd3ff;text-decoration:none}a.tel:hover{text-decoration:underline}
   .warnrow{box-shadow:inset 3px 0 0 var(--warn)}
   @media(max-width:900px){#q{width:140px}.stats{display:none}thead th{top:150px}}
+
+  /* ===== MOBILE: card layout ===== */
+  @media(max-width:720px){
+    body{font-size:15px}
+    header{padding:8px 10px}
+    h1{font-size:16px;width:100%}
+    .stats{display:none}
+    .controls{width:100%;margin-left:0;gap:6px}
+    #q{width:100%;order:-1;padding:11px 12px;font-size:16px}
+    .controls select{flex:1;min-width:44%;padding:10px 6px}
+    .controls .chk{width:100%;padding:4px 0}
+    #waSession{flex:1 0 100%;padding:12px;font-size:15px}
+    .controls button.mini{flex:1;min-width:30%;padding:9px 6px;font-size:12px}
+    .bar2{margin-top:6px}
+    .tmpl-wrap{flex-direction:column;min-width:0;width:100%}
+    #tmpl{width:100%;font-size:15px;min-height:64px}
+    .tmpl-wrap>div{flex-direction:row!important;align-items:center;justify-content:space-between;width:100%}
+    #saveTmpl{padding:9px 14px}
+    .wrap{padding:0 8px 90px}
+    thead{display:none}
+    table,tbody,tr,td{display:block;width:100%}
+    tbody tr{background:var(--panel);border:1px solid var(--line);border-radius:14px;margin:10px 0;padding:10px 12px;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+    tbody tr:hover{background:var(--panel)}
+    tbody tr.warnrow{box-shadow:inset 4px 0 0 var(--warn),0 2px 8px rgba(0,0,0,.25)}
+    tbody td{border:none;padding:6px 0;display:flex;justify-content:space-between;align-items:center;gap:12px;text-align:right;overflow-wrap:anywhere;word-break:break-word}
+    tbody td::before{content:attr(data-label);color:var(--mut);font-size:11px;text-transform:uppercase;letter-spacing:.4px;flex:0 0 84px;text-align:left;font-weight:600}
+    td.idcol{display:none}
+    td.name{font-size:19px;font-weight:800;text-align:left;border-bottom:1px solid var(--line);padding:2px 0 9px;margin-bottom:4px}
+    td.name::before{display:none}
+    td.phone{font-size:16px}
+    td.phone a.tel{font-size:17px}
+    .ctry-sel,.status-sel{max-width:none;flex:1;padding:8px 6px;font-size:14px}
+    td[data-k="phone_all"],td[data-k="stage"],td[data-k="responsible"],td[data-k="notes"],td[data-label="Last contacted"]{font-size:14px}
+    td.actions{justify-content:flex-start;flex-wrap:wrap;gap:8px;border-top:1px solid var(--line);padding-top:10px;margin-top:4px}
+    td.actions::before{display:none}
+    td.actions .mini{flex:0 0 auto;padding:10px 14px;font-size:14px;margin:0}
+    td.actions button.wa{flex:1;min-width:120px;order:-1}
+    .foot{font-size:11px;padding:6px 10px;gap:8px;flex-wrap:wrap}
+    .foot>span:first-child{display:none}
+    .pager{margin-left:0;width:100%;justify-content:center}
+    .modal{padding:10px}
+    .modal .box{padding:12px}
+  }
 </style>
 </head>
 <body>
@@ -207,18 +250,18 @@ function rowHtml(r,q){
   const copy=digits?`<button class="mini" title="Copy number" onclick="copyNum('${digits}')">⧉</button>`:'';
   const warn=(cc==='low'||cc==='none'||cc==='verify')?'warnrow':'';
   return `<tr data-id="${r.id}" class="${r.status==='Contacted'?'contacted':''} ${warn}">
-    <td class="idcol">${r.id}</td>
-    <td class="name" contenteditable data-k="name">${hl(r.name,q)}</td>
-    <td class="phone" data-k="phone_primary" contenteditable>${tel}</td>
-    <td>${ctrySelect(r)}</td>
-    <td>${conf}</td>
-    <td class="phone" contenteditable data-k="phone_all" style="font-weight:400;color:#9fb3d9">${hl(r.phone_all,q)}</td>
-    <td contenteditable data-k="responsible">${hl(r.responsible,q)}</td>
-    <td contenteditable data-k="stage" style="color:#9fb3d9;font-size:12px">${hl(r.stage,q)}</td>
-    <td><select class="status-sel st-${r.status}" data-k="status">${STATUSES.map(s=>`<option ${s===r.status?'selected':''}>${s}</option>`).join('')}</select></td>
-    <td style="color:#9fb3d9;font-size:12px">${esc(r.last_contacted||'')}</td>
-    <td contenteditable data-k="notes">${hl(r.notes,q)}</td>
-    <td class="actions">${wabtn}${copy}${img}<button class="mini del" onclick="delRow(${r.id})">✕</button></td>
+    <td class="idcol" data-label="#">${r.id}</td>
+    <td class="name" contenteditable data-k="name" data-label="Name">${hl(r.name,q)}</td>
+    <td class="phone" data-k="phone_primary" contenteditable data-label="Phone">${tel}</td>
+    <td data-label="Country">${ctrySelect(r)}</td>
+    <td data-label="Verified">${conf}</td>
+    <td class="phone" contenteditable data-k="phone_all" style="font-weight:400;color:#9fb3d9" data-label="All numbers">${hl(r.phone_all,q)}</td>
+    <td contenteditable data-k="responsible" data-label="Agent">${hl(r.responsible,q)}</td>
+    <td contenteditable data-k="stage" style="color:#9fb3d9;font-size:12px" data-label="List">${hl(r.stage,q)}</td>
+    <td data-label="Status"><select class="status-sel st-${r.status}" data-k="status">${STATUSES.map(s=>`<option ${s===r.status?'selected':''}>${s}</option>`).join('')}</select></td>
+    <td style="color:#9fb3d9;font-size:12px" data-label="Last contacted">${esc(r.last_contacted||'')}</td>
+    <td contenteditable data-k="notes" data-label="Notes">${hl(r.notes,q)}</td>
+    <td class="actions" data-label="Contact">${wabtn}${copy}${img}<button class="mini del" onclick="delRow(${r.id})">✕</button></td>
   </tr>`;
 }
 
