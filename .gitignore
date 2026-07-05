@@ -1,5 +1,9 @@
+# raw PII source data — never publish
+source-data/
 *.xlsx
 *.jpg
 *.jpeg
 *.png
 .DS_Store
+*.pyc
+__pycache__/

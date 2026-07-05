@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prakrati — Real Estate Leads CRM</title>
+<style>
+  :root{--bg:#0f1420;--panel:#171e2e;--panel2:#1e2740;--line:#2a3550;--txt:#e6ebf5;--mut:#8a97b3;
+    --acc:#4f8cff;--acc2:#7c5cff;--good:#2ecc71;--warn:#f1c40f;--bad:#e74c3c;--wa:#25d366;}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--txt);font-size:14px}
+  header{position:sticky;top:0;z-index:20;background:linear-gradient(90deg,#131a2b,#1a2238);border-bottom:1px solid var(--line);padding:10px 16px}
+  .row1{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+  h1{font-size:17px;margin:0;font-weight:700;letter-spacing:.3px}h1 span{color:var(--acc)}
+  .stats{display:flex;gap:6px;flex-wrap:wrap}
+  .stat{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:4px 9px;font-size:11px;color:var(--mut)}
+  .stat b{color:var(--txt);font-size:13px}
+  .controls{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-left:auto}
+  input,select,button,textarea{font-family:inherit;font-size:13px}
+  #q{background:var(--panel);border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:8px 12px;width:240px;outline:none}
+  #q:focus{border-color:var(--acc)}
+  select{background:var(--panel);border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:8px 8px;outline:none}
+  button{background:var(--panel2);border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:8px 11px;cursor:pointer;transition:.15s}
+  button:hover{border-color:var(--acc);background:#223055}
+  button.primary{background:var(--acc);border-color:var(--acc);color:#fff}
+  button.wa{background:var(--wa);border-color:var(--wa);color:#04310f;font-weight:700}
+  button.wa:hover{filter:brightness(1.1)}
+  .bar2{display:flex;gap:10px;align-items:center;margin-top:8px;flex-wrap:wrap}
+  .tmpl-wrap{flex:1;min-width:320px;display:flex;gap:8px;align-items:flex-start}
+  #tmpl{flex:1;background:var(--panel);border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:8px 10px;min-height:38px;resize:vertical;outline:none;line-height:1.4}
+  #tmpl:focus{border-color:var(--wa)}
+  .hint{font-size:11px;color:var(--mut)}
+  .chk{display:flex;gap:5px;align-items:center;font-size:12px;color:var(--mut);cursor:pointer;user-select:none}
+  .wrap{padding:0 12px 70px}
+  table{border-collapse:collapse;width:100%;margin-top:10px}
+  thead th{position:sticky;top:112px;background:#141b2c;z-index:10;text-align:left;padding:9px 7px;border-bottom:2px solid var(--line);font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.4px;cursor:pointer;white-space:nowrap}
+  thead th:hover{color:var(--txt)}
+  tbody td{padding:6px 7px;border-bottom:1px solid #202a42;vertical-align:top}
+  tbody tr:hover{background:#151d30}
+  tr.contacted{opacity:.62}
+  td[contenteditable]:focus{background:#0d1730;box-shadow:inset 0 0 0 1px var(--acc);outline:none;border-radius:4px}
+  .name{font-weight:600;min-width:170px}
+  .idcol{color:var(--mut);font-size:11px;width:40px}
+  .phone{font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600;color:#bcd3ff}
+  .flag{font-size:15px;margin-right:3px}
+  .chip{display:inline-block;padding:1px 7px;border-radius:20px;font-size:10px;font-weight:700;white-space:nowrap}
+  .c-high{background:rgba(46,204,113,.15);color:#7ee2a8;border:1px solid rgba(46,204,113,.3)}
+  .c-medium{background:rgba(79,140,255,.15);color:#9cc0ff;border:1px solid rgba(79,140,255,.3)}
+  .c-verify,.c-low,.c-none{background:rgba(241,196,15,.15);color:#f4d35e;border:1px solid rgba(241,196,15,.35)}
+  .src-photo{color:#f4d35e}.src-excel{color:var(--mut)}
+  .ctry-sel{background:var(--panel);border:1px solid var(--line);color:var(--txt);border-radius:6px;padding:3px 4px;font-size:12px;max-width:120px}
+  .status-sel{background:var(--panel);border:1px solid var(--line);color:var(--txt);border-radius:6px;padding:3px 5px;font-size:12px}
+  .st-New{color:#8a97b3}.st-Contacted{color:#4f8cff}.st-Interested{color:#2ecc71}.st-Viewing{color:#7c5cff}.st-Negotiating{color:#f1c40f}.st-Closed{color:#2ecc71}.st-Dead{color:#e74c3c}
+  .actions{white-space:nowrap}
+  .mini{padding:3px 7px;font-size:11px;margin-right:3px}
+  .del:hover{border-color:var(--bad);color:var(--bad)}
+  .foot{position:fixed;bottom:0;left:0;right:0;background:#0d1320;border-top:1px solid var(--line);padding:7px 16px;font-size:12px;color:var(--mut);display:flex;gap:14px;align-items:center;z-index:15}
+  .foot b{color:var(--txt)}
+  .pager{margin-left:auto;display:flex;gap:6px;align-items:center}
+  .modal{position:fixed;inset:0;background:rgba(4,8,18,.85);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
+  .modal.open{display:flex}
+  .modal .box{max-width:95vw;max-height:92vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px}
+  .modal img{max-width:88vw;max-height:74vh;border-radius:8px;display:block}
+  .modal .cap{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:20px}
+  #helpBox{max-width:640px;line-height:1.55}
+  #helpBox h3{margin:6px 0}#helpBox li{margin:5px 0;color:#cdd7ea}
+  .tag{font-size:11px;color:var(--mut);background:var(--panel2);padding:2px 7px;border-radius:6px;border:1px solid var(--line)}
+  mark{background:#5a4a00;color:#ffe27a;padding:0 2px;border-radius:3px}
+  .empty{text-align:center;color:var(--mut);padding:40px}
+  a.tel{color:#bcd3ff;text-decoration:none}a.tel:hover{text-decoration:underline}
+  .warnrow{box-shadow:inset 3px 0 0 var(--warn)}
+  @media(max-width:900px){#q{width:140px}.stats{display:none}thead th{top:150px}}
+
+  /* ===== MOBILE: card layout ===== */
+  @media(max-width:720px){
+    body{font-size:15px}
+    header{padding:8px 10px}
+    h1{font-size:16px;width:100%}
+    .stats{display:none}
+    .controls{width:100%;margin-left:0;gap:6px}
+    #q{width:100%;order:-1;padding:11px 12px;font-size:16px}
+    .controls select{flex:1;min-width:44%;padding:10px 6px}
+    .controls .chk{width:100%;padding:4px 0}
+    #waSession{flex:1 0 100%;padding:12px;font-size:15px}
+    .controls button.mini{flex:1;min-width:30%;padding:9px 6px;font-size:12px}
+    .bar2{margin-top:6px}
+    .tmpl-wrap{flex-direction:column;min-width:0;width:100%}
+    #tmpl{width:100%;font-size:15px;min-height:64px}
+    .tmpl-wrap>div{flex-direction:row!important;align-items:center;justify-content:space-between;width:100%}
+    #saveTmpl{padding:9px 14px}
+    .wrap{padding:0 8px 90px}
+    thead{display:none}
+    table,tbody,tr,td{display:block;width:100%}
+    tbody tr{background:var(--panel);border:1px solid var(--line);border-radius:14px;margin:10px 0;padding:10px 12px;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+    tbody tr:hover{background:var(--panel)}
+    tbody tr.warnrow{box-shadow:inset 4px 0 0 var(--warn),0 2px 8px rgba(0,0,0,.25)}
+    tbody td{border:none;padding:6px 0;display:flex;justify-content:space-between;align-items:center;gap:12px;text-align:right;overflow-wrap:anywhere;word-break:break-word}
+    tbody td::before{content:attr(data-label);color:var(--mut);font-size:11px;text-transform:uppercase;letter-spacing:.4px;flex:0 0 84px;text-align:left;font-weight:600}
+    td.idcol{display:none}
+    td.name{font-size:19px;font-weight:800;text-align:left;border-bottom:1px solid var(--line);padding:2px 0 9px;margin-bottom:4px}
+    td.name::before{display:none}
+    td.phone{font-size:16px}
+    td.phone a.tel{font-size:17px}
+    .ctry-sel,.status-sel{max-width:none;flex:1;padding:8px 6px;font-size:14px}
+    td[data-k="phone_all"],td[data-k="stage"],td[data-k="responsible"],td[data-k="notes"],td[data-label="Last contacted"]{font-size:14px}
+    td.actions{justify-content:flex-start;flex-wrap:wrap;gap:8px;border-top:1px solid var(--line);padding-top:10px;margin-top:4px}
+    td.actions::before{display:none}
+    td.actions .mini{flex:0 0 auto;padding:10px 14px;font-size:14px;margin:0}
+    td.actions button.wa{flex:1;min-width:120px;order:-1}
+    .foot{font-size:11px;padding:6px 10px;gap:8px;flex-wrap:wrap}
+    .foot>span:first-child{display:none}
+    .pager{margin-left:0;width:100%;justify-content:center}
+    .modal{padding:10px}
+    .modal .box{padding:12px}
+  }
+</style>
+</head>
+<body>
+<div id="gate" style="position:fixed;inset:0;z-index:999;background:radial-gradient(1200px 600px at 50% -10%,#1b2540,#0b101c);display:flex;align-items:center;justify-content:center;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif">
+  <div style="width:340px;background:#141b2c;border:1px solid #2a3550;border-radius:14px;padding:26px;box-shadow:0 20px 60px rgba(0,0,0,.5)">
+    <div style="font-size:20px;font-weight:800;color:#e6ebf5;letter-spacing:.3px">Prakrati <span style="color:#4f8cff">Leads CRM</span></div>
+    <div style="font-size:12px;color:#8a97b3;margin:6px 0 18px">Private — enter the team password to continue.</div>
+    <input id="gatePw" type="password" placeholder="Password" autocomplete="current-password"
+      style="width:100%;background:#0f1420;border:1px solid #2a3550;color:#e6ebf5;border-radius:9px;padding:11px 12px;font-size:14px;outline:none">
+    <div id="gateErr" style="color:#e74c3c;font-size:12px;height:16px;margin:6px 2px"></div>
+    <button id="gateBtn" style="width:100%;background:#4f8cff;border:none;color:#fff;font-weight:700;border-radius:9px;padding:11px;font-size:14px;cursor:pointer">Unlock</button>
+    <div style="font-size:11px;color:#5f6c88;margin-top:16px;text-align:center">Created by <b style="color:#7c8bab">Developer Shashank Mohan</b></div>
+  </div>
+</div>
+<div id="app" style="display:none">
+<header>
+  <div class="row1">
+    <h1>Prakrati <span>Leads CRM</span></h1>
+    <div class="stats">
+      <div class="stat">Total <b id="s-total">0</b></div>
+      <div class="stat">Showing <b id="s-shown">0</b></div>
+      <div class="stat">Contacted <b id="s-contacted">0</b></div>
+      <div class="stat">Verify # <b id="s-verify">0</b></div>
+    </div>
+    <div class="controls">
+      <input id="q" placeholder="Search anything…" autocomplete="off">
+      <select id="f-country"><option value="">All countries</option></select>
+      <select id="f-source"><option value="">All sources</option></select>
+      <select id="f-status"><option value="">All statuses</option></select>
+      <label class="chk"><input type="checkbox" id="f-uncontacted"> Uncontacted only</label>
+      <button id="waSession" class="wa">▶ WhatsApp mode</button>
+      <button id="helpBtn" class="mini">? Safe outreach</button>
+      <button id="addBtn" class="mini">+ Add</button>
+      <button id="exportCsv" class="mini">CSV</button>
+      <button id="resetBtn" class="mini del">Reset</button>
+      <button id="logoutBtn" class="mini">Logout</button>
+    </div>
+  </div>
+  <div class="bar2">
+    <div class="tmpl-wrap">
+      <textarea id="tmpl" spellcheck="false"></textarea>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <button id="saveTmpl" class="mini primary">Save msg</button>
+        <span class="hint">Placeholders: {{name}} {{first_name}} {{agent}}</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <table id="tbl">
+    <thead><tr>
+      <th data-k="id">#</th>
+      <th data-k="name">Name</th>
+      <th data-k="phone_primary">Phone (intl)</th>
+      <th data-k="country">Country</th>
+      <th data-k="phone_confidence">#✓</th>
+      <th data-k="phone_all">All numbers</th>
+      <th data-k="responsible">Agent</th>
+      <th data-k="stage">List</th>
+      <th data-k="status">Status</th>
+      <th data-k="last_contacted">Last contacted</th>
+      <th data-k="notes">Notes</th>
+      <th>Contact</th>
+    </tr></thead>
+    <tbody id="body"></tbody>
+  </table>
+  <div class="empty" id="empty" style="display:none">No leads match.</div>
+</div>
+
+<div class="foot">
+  <span>Edits auto-save to this browser. <b>WA</b> opens WhatsApp with your message pre-filled & marks the lead Contacted.</span>
+  <span style="color:#5f6c88">·</span>
+  <span style="color:#7c8bab">Created by <b style="color:#9cc0ff">Developer Shashank Mohan</b></span>
+  <div class="pager">
+    <span id="pageinfo"></span>
+    <button id="prev" class="mini">‹</button><button id="next" class="mini">›</button>
+    <select id="perpage" class="status-sel"><option>50</option><option>100</option><option selected>200</option><option>500</option><option value="99999">All</option></select>
+  </div>
+</div>
+
+<div class="modal" id="modal"><div class="box">
+  <div class="cap"><span class="tag" id="modal-cap"></span><button onclick="closeModal()">Close ✕</button></div>
+  <div id="modal-body"></div>
+</div></div>
+
+<script id="DATA" type="application/json">__DATA__</script>
+<script>
+const STATUSES=["New","Contacted","Interested","Viewing","Negotiating","Closed","Dead"];
+const COUNTRIES=[["AE","🇦🇪 UAE"],["RU","🇷🇺 Russia"],["NG","🇳🇬 Nigeria"],["IN","🇮🇳 India"],["PK","🇵🇰 Pakistan"],["SA","🇸🇦 Saudi Arabia"],["EG","🇪🇬 Egypt"],["GB","🇬🇧 UK"],["US","🇺🇸 USA"],["DE","🇩🇪 Germany"],["FR","🇫🇷 France"],["ES","🇪🇸 Spain"],["IT","🇮🇹 Italy"],["TR","🇹🇷 Turkey"],["UA","🇺🇦 Ukraine"],["KZ","🇰🇿 Kazakhstan"],["QA","🇶🇦 Qatar"],["KW","🇰🇼 Kuwait"],["OM","🇴🇲 Oman"],["BH","🇧🇭 Bahrain"],["LB","🇱🇧 Lebanon"],["JO","🇯🇴 Jordan"],["IQ","🇮🇶 Iraq"],["SY","🇸🇾 Syria"],["MA","🇲🇦 Morocco"],["PH","🇵🇭 Philippines"],["ID","🇮🇩 Indonesia"],["CN","🇨🇳 China"],["AU","🇦🇺 Australia"],["JP","🇯🇵 Japan"],["CA","🇨🇦 Canada"],["NL","🇳🇱 Netherlands"],["ZA","🇿🇦 South Africa"],["PY","🇵🇾 Paraguay"],["","— unknown"]];
+const DEFAULT_TMPL="Hi {{first_name}}, this is Prakrati from Sanaya Real Estate, Dubai, UAE. I have a few high-ROI property options I think match what you're looking for. Would it be okay to share a couple of options with you here on WhatsApp?";
+const RAW=JSON.parse(document.getElementById('DATA').textContent);
+const IMAGES=RAW.images||{};
+const LSKEY='gunjan_crm_v2', TKEY='gunjan_crm_tmpl';
+let data=load(), sortK='id',sortAsc=true,page=1;
+
+function load(){const s=localStorage.getItem(LSKEY);if(s){try{return JSON.parse(s)}catch(e){}}return RAW.records.map(r=>({...r}))}
+function save(){localStorage.setItem(LSKEY,JSON.stringify(data))}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function uniq(k){return [...new Set(data.map(r=>r[k]).filter(Boolean))].sort()}
+function fillSelect(id,k,pre){const s=document.getElementById(id),cur=s.value;s.innerHTML=`<option value="">${pre}</option>`+uniq(k).map(v=>`<option>${esc(v)}</option>`).join('');s.value=cur}
+
+// template
+document.getElementById('tmpl').value=localStorage.getItem(TKEY)||DEFAULT_TMPL;
+document.getElementById('saveTmpl').onclick=()=>{localStorage.setItem(TKEY,document.getElementById('tmpl').value);flash('Message template saved')};
+function tmplFor(r){let t=document.getElementById('tmpl').value;
+  return t.replace(/{{\s*name\s*}}/gi,r.name||'there').replace(/{{\s*first_name\s*}}/gi,(r.first_name||r.name||'there').split(' ')[0]).replace(/{{\s*agent\s*}}/gi,r.responsible||'')}
+
+function filtered(){
+  const q=document.getElementById('q').value.trim().toLowerCase();
+  const fc=document.getElementById('f-country').value, fs=document.getElementById('f-source').value, ft=document.getElementById('f-status').value;
+  const unc=document.getElementById('f-uncontacted').checked;
+  let rows=data.filter(r=>{
+    if(fc&&r.country!==fc)return false;
+    if(fs&&r.source!==fs)return false;
+    if(ft&&r.status!==ft)return false;
+    if(unc&&(r.status==='Contacted'||r.last_contacted))return false;
+    if(!q)return true;
+    return (r.name+' '+r.phone_primary+' '+r.phone_all+' '+r.phone_raw+' '+r.country+' '+r.country_iso+' '+r.responsible+' '+r.stage+' '+r.notes+' '+r.source).toLowerCase().includes(q);
+  });
+  rows.sort((a,b)=>{let x=a[sortK],y=b[sortK];if(sortK==='id'){x=+x;y=+y}if(typeof x==='string')x=x.toLowerCase();if(typeof y==='string')y=y.toLowerCase();return (x>y?1:x<y?-1:0)*(sortAsc?1:-1)});
+  return rows;
+}
+function hl(s,q){s=esc(s);if(!q)return s;try{return s.replace(new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig'),'<mark>$1</mark>')}catch(e){return s}}
+
+function ctrySelect(r){return `<select class="ctry-sel" data-k="country_iso">`+COUNTRIES.map(c=>`<option value="${c[0]}" ${c[0]===r.country_iso?'selected':''}>${c[1]}</option>`).join('')+`</select>`}
+
+function rowHtml(r,q){
+  const digits=(r.phone_primary||'').replace(/[^\d]/g,'');
+  const tel=r.phone_primary?`<a class="tel" href="tel:${esc(r.phone_primary)}">${hl(r.phone_primary,q)}</a>`:'<span style="color:#556">—</span>';
+  const cc=r.phone_confidence||'high';
+  const conf=`<span class="chip c-${cc}">${cc==='high'?'✓':cc==='medium'?'~':'?'}</span>`;
+  const img=r.source_image?`<button class="mini" title="See source photo" onclick="showImg('${esc(r.source_image)}','${esc(r.name)}')">IMG</button>`:'';
+  const wabtn=digits?`<button class="mini wa" onclick="waSend(${r.id})">WA</button>`:'';
+  const copy=digits?`<button class="mini" title="Copy number" onclick="copyNum('${digits}')">⧉</button>`:'';
+  const warn=(cc==='low'||cc==='none'||cc==='verify')?'warnrow':'';
+  return `<tr data-id="${r.id}" class="${r.status==='Contacted'?'contacted':''} ${warn}">
+    <td class="idcol" data-label="#">${r.id}</td>
+    <td class="name" contenteditable data-k="name" data-label="Name">${hl(r.name,q)}</td>
+    <td class="phone" data-k="phone_primary" contenteditable data-label="Phone">${tel}</td>
+    <td data-label="Country">${ctrySelect(r)}</td>
+    <td data-label="Verified">${conf}</td>
+    <td class="phone" contenteditable data-k="phone_all" style="font-weight:400;color:#9fb3d9" data-label="All numbers">${hl(r.phone_all,q)}</td>
+    <td contenteditable data-k="responsible" data-label="Agent">${hl(r.responsible,q)}</td>
+    <td contenteditable data-k="stage" style="color:#9fb3d9;font-size:12px" data-label="List">${hl(r.stage,q)}</td>
+    <td data-label="Status"><select class="status-sel st-${r.status}" data-k="status">${STATUSES.map(s=>`<option ${s===r.status?'selected':''}>${s}</option>`).join('')}</select></td>
+    <td style="color:#9fb3d9;font-size:12px" data-label="Last contacted">${esc(r.last_contacted||'')}</td>
+    <td contenteditable data-k="notes" data-label="Notes">${hl(r.notes,q)}</td>
+    <td class="actions" data-label="Contact">${wabtn}${copy}${img}<button class="mini del" onclick="delRow(${r.id})">✕</button></td>
+  </tr>`;
+}
+
+function render(){
+  fillSelect('f-country','country','All countries');fillSelect('f-source','source','All sources');
+  const st=document.getElementById('f-status');if(st.options.length<=1)st.innerHTML='<option value="">All statuses</option>'+STATUSES.map(s=>`<option>${s}</option>`).join('');
+  const rows=filtered(),per=+document.getElementById('perpage').value,pages=Math.max(1,Math.ceil(rows.length/per));
+  if(page>pages)page=pages;
+  const slice=rows.slice((page-1)*per,(page-1)*per+per),q=document.getElementById('q').value.trim();
+  document.getElementById('body').innerHTML=slice.map(r=>rowHtml(r,q)).join('');
+  document.getElementById('empty').style.display=rows.length?'none':'block';
+  document.getElementById('s-total').textContent=data.length;
+  document.getElementById('s-shown').textContent=rows.length;
+  document.getElementById('s-contacted').textContent=data.filter(r=>r.status==='Contacted'||r.last_contacted).length;
+  document.getElementById('s-verify').textContent=data.filter(r=>['low','none','verify'].includes(r.phone_confidence)).length;
+  document.getElementById('pageinfo').textContent=`Pg ${page}/${pages}`;
+}
+
+// edits
+document.getElementById('body').addEventListener('input',e=>{const td=e.target.closest('[contenteditable]');if(td){const id=+td.closest('tr').dataset.id,k=td.dataset.k,rec=data.find(r=>r.id===id);rec[k]=td.innerText.trim();save()}});
+document.getElementById('body').addEventListener('change',e=>{
+  const sel=e.target;const tr=sel.closest('tr');if(!tr)return;const id=+tr.dataset.id,rec=data.find(r=>r.id===id);
+  if(sel.matches('select[data-k="status"]')){rec.status=sel.value;sel.className='status-sel st-'+rec.status;tr.classList.toggle('contacted',rec.status==='Contacted');save();updateStats()}
+  if(sel.matches('select[data-k="country_iso"]')){rec.country_iso=sel.value;const c=COUNTRIES.find(x=>x[0]===sel.value);rec.country=c?c[1].replace(/^\S+\s/,''):'';save()}
+});
+function updateStats(){document.getElementById('s-contacted').textContent=data.filter(r=>r.status==='Contacted'||r.last_contacted).length}
+
+function today(){return new Date().toISOString().slice(0,10)}
+function markContacted(rec){if(rec.status==='New')rec.status='Contacted';rec.last_contacted=today();save();render()}
+function waSend(id){const r=data.find(x=>x.id===id);const digits=(r.phone_primary||'').replace(/[^\d]/g,'');if(!digits){alert('No number');return}
+  if(['low','none','verify'].includes(r.phone_confidence)){if(!confirm('⚠ This number is LOW confidence (likely from a photo). Open the source photo to verify the digits first?\n\nOK = open WhatsApp anyway\nCancel = stop')){return}}
+  const url='https://wa.me/'+digits+'?text='+encodeURIComponent(tmplFor(r));
+  window.open(url,'_blank');markContacted(r)}
+function copyNum(d){navigator.clipboard.writeText(d);flash('Copied +'+d)}
+
+// WhatsApp stepper mode
+let waQueue=[],waIdx=0;
+document.getElementById('waSession').onclick=()=>{
+  waQueue=filtered().filter(r=>{const d=(r.phone_primary||'').replace(/[^\d]/g,'');return d && !(r.status==='Contacted'||r.last_contacted)});
+  if(!waQueue.length){alert('No uncontacted leads with a valid number in the current filter.');return}
+  waIdx=0;openStep()};
+function openStep(){
+  if(waIdx>=waQueue.length){closeModal();flash('WhatsApp session done ✓');return}
+  const r=waQueue[waIdx];const digits=(r.phone_primary||'').replace(/[^\d]/g,'');
+  const low=['low','none','verify'].includes(r.phone_confidence);
+  document.getElementById('modal-cap').textContent=`WhatsApp session — ${waIdx+1} of ${waQueue.length}`;
+  document.getElementById('modal-body').innerHTML=`
+    <div style="max-width:560px">
+      <div style="font-size:18px;font-weight:700;margin-bottom:4px">${esc(r.name)}</div>
+      <div class="phone" style="font-size:16px;margin-bottom:6px">${r.flag||''} ${esc(r.phone_primary)} <span class="chip c-${r.phone_confidence}">${r.phone_confidence}</span></div>
+      ${low?'<div style="color:#f4d35e;font-size:12px;margin-bottom:8px">⚠ Low-confidence number from a photo — verify before sending.</div>':''}
+      <div style="background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px;white-space:pre-wrap;font-size:13px;line-height:1.5">${esc(tmplFor(r))}</div>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+        <button class="wa" onclick="stepGo()">Open WhatsApp & mark contacted →</button>
+        ${r.source_image?`<button onclick="showImg('${esc(r.source_image)}','${esc(r.name)}')">See photo</button>`:''}
+        <button onclick="stepSkip()">Skip</button>
+        <button onclick="closeModal()">End session</button>
+      </div>
+      <div class="hint" style="margin-top:8px">Tip: message in small batches from your own warmed WhatsApp. Personalise the first line.</div>
+    </div>`;
+  document.getElementById('modal').classList.add('open');
+}
+function stepGo(){const r=waQueue[waIdx];const digits=(r.phone_primary||'').replace(/[^\d]/g,'');
+  window.open('https://wa.me/'+digits+'?text='+encodeURIComponent(tmplFor(r)),'_blank');markContacted(r);waIdx++;openStep()}
+function stepSkip(){waIdx++;openStep()}
+
+function delRow(id){if(!confirm('Delete this lead?'))return;data=data.filter(r=>r.id!==id);save();render()}
+function addLead(){const nid=(data.reduce((m,r)=>Math.max(m,+r.id),0)||0)+1;
+  data.unshift({id:nid,name:'New Lead',first_name:'',phone_primary:'',phone_all:'',phone_raw:'',country_iso:'',country:'',flag:'',phone_confidence:'high',responsible:'',stage:'',status:'New',last_contacted:'',source:'Manual',notes:''});
+  save();sortK='id';sortAsc=false;page=1;render();window.scrollTo(0,0)}
+
+function showImg(fn,name){const src=IMAGES[fn];if(!src){alert('Image not embedded');return}
+  document.getElementById('modal-cap').textContent='Source photo — '+name;
+  document.getElementById('modal-body').innerHTML=`<img src="${src}">`;document.getElementById('modal').classList.add('open')}
+function showHelp(){document.getElementById('modal-cap').textContent='How to contact leads on WhatsApp — safely';
+  document.getElementById('modal-body').innerHTML=`<div id="helpBox">
+    <h3>Don't get your number blocked — the rules that matter</h3>
+    <ul>
+      <li><b>Use your own warmed-up number</b> (ideally WhatsApp Business). A brand-new SIM messaging 200 strangers gets banned fast.</li>
+      <li><b>Small batches:</b> ~20–40 new chats/day at first, spaced out. Ramp up slowly over 2–3 weeks.</li>
+      <li><b>Personalise the first line</b> — never paste the identical text to hundreds. This CRM already inserts each person's name; vary the opener when you can.</li>
+      <li><b>One message, then wait.</b> Don't double-text people who don't reply. Repeated unanswered messages = "block" reports.</li>
+      <li><b>Give value, ask permission:</b> the default template asks "is it okay to share options?" — consent lowers spam reports.</li>
+      <li><b>Respect opt-outs</b> instantly. Mark them <b>Dead</b> here so you never message again.</li>
+      <li><b>Verify low-confidence numbers</b> (⚠ rows) against the source photo before dialing — wrong number = wasted send + risk.</li>
+    </ul>
+    <h3>How to use this CRM for outreach</h3>
+    <ul>
+      <li>Edit your <b>message template</b> at the top (uses {{first_name}}, {{name}}, {{agent}}). Click <b>Save msg</b>.</li>
+      <li>Filter to a country/list, tick <b>Uncontacted only</b>, then hit <b>▶ WhatsApp mode</b> to go lead-by-lead.</li>
+      <li>Each send opens WhatsApp with the message pre-typed — you review and press send, and the lead is auto-marked <b>Contacted</b> with today's date.</li>
+    </ul></div>`;
+  document.getElementById('modal').classList.add('open')}
+function closeModal(){document.getElementById('modal').classList.remove('open')}
+document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+
+function toCsv(){const cols=['id','name','phone_primary','country','country_iso','phone_confidence','phone_all','phone_raw','responsible','stage','status','last_contacted','source','notes'];
+  const body=filtered().map(r=>cols.map(c=>{let v=r[c]==null?'':String(r[c]);if(/[",\n]/.test(v))v='"'+v.replace(/"/g,'""')+'"';return v}).join(',')).join('\n');
+  const b=new Blob([cols.join(',')+'\n'+body],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='gunjan_leads.csv';a.click()}
+
+let flashT;function flash(m){let e=document.getElementById('flash');if(!e){e=document.createElement('div');e.id='flash';e.style.cssText='position:fixed;bottom:50px;left:50%;transform:translateX(-50%);background:#25d366;color:#04310f;font-weight:700;padding:8px 16px;border-radius:8px;z-index:99';document.body.appendChild(e)}e.textContent=m;e.style.display='block';clearTimeout(flashT);flashT=setTimeout(()=>e.style.display='none',1600)}
+
+document.getElementById('q').addEventListener('input',()=>{page=1;render()});
+['f-country','f-source','f-status','perpage'].forEach(id=>document.getElementById(id).addEventListener('change',()=>{page=1;render()}));
+document.getElementById('f-uncontacted').addEventListener('change',()=>{page=1;render()});
+document.getElementById('addBtn').onclick=addLead;
+document.getElementById('exportCsv').onclick=toCsv;
+document.getElementById('helpBtn').onclick=showHelp;
+document.getElementById('logoutBtn').onclick=function(){try{sessionStorage.removeItem('prakrati_ok')}catch(e){}location.reload()};
+document.getElementById('resetBtn').onclick=()=>{if(confirm('Discard edits and reload original data?')){localStorage.removeItem(LSKEY);data=load();render()}};
+document.getElementById('prev').onclick=()=>{if(page>1){page--;render()}};
+document.getElementById('next').onclick=()=>{page++;render()};
+document.querySelectorAll('thead th[data-k]').forEach(th=>th.onclick=()=>{const k=th.dataset.k;if(sortK===k)sortAsc=!sortAsc;else{sortK=k;sortAsc=true}render()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+render();
+</script>
+<script>
+(function(){
+  // Client-side access gate. NOTE: this deters casual access only; anyone technical can bypass a
+  // static-site password. Do not treat it as strong security. Change PASS below to your team password.
+  var PASS="Groot@09";
+  var gate=document.getElementById('gate'),app=document.getElementById('app'),
+      inp=document.getElementById('gatePw'),btn=document.getElementById('gateBtn'),err=document.getElementById('gateErr');
+  function unlock(){app.style.display='block';gate.style.display='none';try{sessionStorage.setItem('prakrati_ok','1')}catch(e){}}
+  function tryPw(){if(inp.value===PASS){unlock()}else{err.textContent='Wrong password';inp.value='';inp.focus()}}
+  if(sessionStorage.getItem('prakrati_ok')==='1'){unlock()}
+  btn.onclick=tryPw;
+  inp.addEventListener('keydown',function(e){if(e.key==='Enter')tryPw()});
+  inp.focus();
+})();
+</script>
+</body>
+</html>
